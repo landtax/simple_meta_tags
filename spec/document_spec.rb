@@ -23,12 +23,14 @@ describe SimpleMetaTags::Document do
     it 'renders when added 1 by 1' do
       document.meta('MobileOptimized', 320)
       document.meta('og:image:type', 'image/jpeg')
-      document.meta('twitter:title', 'my title')
+      document.meta('twitter:title', 'my title twitter')
+      document.meta('title', 'my title basic')
       document.meta('og:title', 'my title')
 
       expected_text = "<meta name='MobileOptimized' content='320' />\n" +
         "<meta property='og:image:type' content='image/jpeg' />\n" +
-        "<meta name='twitter:title' content='my title' />\n" +
+        "<meta name='twitter:title' content='my title twitter' />\n" +
+        "<title>my title basic</title>\n" +
         "<meta property='og:title' content='my title' />"
 
       expect(document.html_tags).to eq(expected_text)
@@ -37,7 +39,7 @@ describe SimpleMetaTags::Document do
     it 'renders when added in list' do
       document.meta(%w(title og:title), 'my title')
 
-      expected_text = "<meta name='title' content='my title' />\n" +
+      expected_text = "<title>my title</title>\n" +
         "<meta property='og:title' content='my title' />"
 
       expect(document.html_tags).to eq(expected_text)
