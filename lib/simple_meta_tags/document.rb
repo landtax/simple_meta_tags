@@ -13,9 +13,15 @@ module SimpleMetaTags
       return meta_id.map { |id| meta(id, options) } if meta_id.is_a? Array
 
       new_meta = build_meta(meta_id, options)
-      raise ArgumentError.new('Only Strings or Array') unless new_meta
+      raise ArgumentError.new('Only String or Array') unless new_meta
 
       tags[meta_id] = new_meta
+    end
+
+    def html_tags(separator="\n")
+      raise MetaTagMissing.new("Missing tags: #{missing_meta}")  if meta_missing?
+
+      tags.values.map(&:to_html).join(separator)
     end
 
     def require(meta_ids)
@@ -30,12 +36,6 @@ module SimpleMetaTags
       aliases[alias_id] = self.aliases[alias_id] || Alias.new
     end
 
-    def html_tags(separator="\n")
-      raise MetaTagMissing.new("Missing tags: #{missing_meta}")  if meta_missing?
-
-      tags.values.map(&:to_html).join(separator)
-    end
-
     private
 
     def meta_missing?
@@ -48,6 +48,7 @@ module SimpleMetaTags
 
     def build_meta(meta_id, options)
       MetaTag::Html.build(meta_id, options) ||
+      MetaTag::HttpEquiv.build(meta_id, options) ||
       MetaTag::OpenGraph.build(meta_id, options) ||
       MetaTag::Twitter.build(meta_id, options) ||
       MetaTag::Generic.build(meta_id, options)

@@ -25,12 +25,14 @@ describe SimpleMetaTags::Document do
       document.meta('og:image:type', 'image/jpeg')
       document.meta('twitter:title', 'my title twitter')
       document.meta('title', 'my title basic')
+      document.meta('refresh', 10)
       document.meta('og:title', 'my title')
 
       expected_text = "<meta name='MobileOptimized' content='320' />\n" +
         "<meta property='og:image:type' content='image/jpeg' />\n" +
         "<meta name='twitter:title' content='my title twitter' />\n" +
         "<title>my title basic</title>\n" +
+        "<meta http-equiv='refresh' content='10' />\n" +
         "<meta property='og:title' content='my title' />"
 
       expect(document.html_tags).to eq(expected_text)
