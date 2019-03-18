@@ -48,6 +48,7 @@ module SimpleMetaTags
 
     def build_meta(meta_id, options)
       MetaTag::OpenGraph.build(meta_id, options) ||
+      MetaTag::Twitter.build(meta_id, options) ||
       MetaTag::Generic.build(meta_id, options)
     end
   end

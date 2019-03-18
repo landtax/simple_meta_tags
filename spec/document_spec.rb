@@ -23,10 +23,12 @@ describe SimpleMetaTags::Document do
     it 'renders when added 1 by 1' do
       document.meta('MobileOptimized', 320)
       document.meta('og:image:type', 'image/jpeg')
+      document.meta('twitter:title', 'my title')
       document.meta('og:title', 'my title')
 
       expected_text = "<meta name='MobileOptimized' content='320' />\n" +
         "<meta property='og:image:type' content='image/jpeg' />\n" +
+        "<meta name='twitter:title' content='my title' />\n" +
         "<meta property='og:title' content='my title' />"
 
       expect(document.html_tags).to eq(expected_text)
@@ -53,9 +55,10 @@ describe SimpleMetaTags::Document do
 
       document.optional('og:title')
       expect(document.html_tags).to eq(expected_text)
+
+      document.require(['og:title', 'og:image:type'])
+      expect{document.html_tags}.to raise_error(SimpleMetaTags::MetaTagMissing)
     end
-
-
   end
 
 end
