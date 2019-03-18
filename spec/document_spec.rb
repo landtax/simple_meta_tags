@@ -26,6 +26,7 @@ describe SimpleMetaTags::Document do
       document.meta('twitter:title', 'my title twitter')
       document.meta('title', 'my title basic')
       document.meta('refresh', 10)
+      document.meta('canonical', 'http://google.com')
       document.meta('og:title', 'my title')
 
       expected_text = "<meta name='MobileOptimized' content='320' />\n" +
@@ -33,6 +34,7 @@ describe SimpleMetaTags::Document do
         "<meta name='twitter:title' content='my title twitter' />\n" +
         "<title>my title basic</title>\n" +
         "<meta http-equiv='refresh' content='10' />\n" +
+        "<link rel='canonical' href='http://google.com' />\n" +
         "<meta property='og:title' content='my title' />"
 
       expect(document.html_tags).to eq(expected_text)
@@ -49,15 +51,18 @@ describe SimpleMetaTags::Document do
   end
 
   describe 'Required/optional meta tags' do
-    let(:expected_text) {"<meta property='og:image:type' content='image/jpeg' />"}
+    let(:expected_text) {"<meta property='og:image:type' content='image/jpeg' />\n" +
+                         "<link rel='canonical' href='http://google.com' />"}
 
     it 'raises an error when some tags are missing but doesn\'t when optional' do
 
       document.require(['og:title', 'og:image:type'])
+      document.require('canonical')
       document.meta('og:image:type', 'image/jpeg')
       expect{document.html_tags}.to raise_error(SimpleMetaTags::MetaTagMissing)
 
       document.optional('og:title')
+      document.meta('canonical', 'http://google.com')
       expect(document.html_tags).to eq(expected_text)
 
       document.require(['og:title', 'og:image:type'])
