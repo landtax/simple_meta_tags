@@ -1,11 +1,12 @@
 module SimpleMetaTags
   class Document
 
-    attr_reader :tags, :aliases
+    attr_reader :tags, :aliases, :required_meta
 
     def initialize
       @tags = {}
       @aliases = {}
+      @required_meta = []
     end
 
     def meta(meta_id, options=nil)
@@ -17,15 +18,33 @@ module SimpleMetaTags
       tags[meta_id] = new_meta
     end
 
+    def require(meta_ids)
+      @required_meta += [meta_ids].flatten
+    end
+
+    def optional(meta_ids)
+      @required_meta -= [meta_ids].flatten
+    end
+
     def alias(alias_id)
       aliases[alias_id] = self.aliases[alias_id] || Alias.new
     end
 
     def html_tags(separator="\n")
-      tags.values.map(&:render).join(separator)
+      raise MetaTagMissing.new("Missing tags: #{missing_meta}")  if meta_missing?
+
+      tags.values.map(&:to_html).join(separator)
     end
 
     private
+
+    def meta_missing?
+      missing_meta.any?
+    end
+
+    def missing_meta
+      @required_meta - tags.keys
+    end
 
     def build_meta(meta_id, options)
       MetaTag::OpenGraph.build(meta_id, options) ||

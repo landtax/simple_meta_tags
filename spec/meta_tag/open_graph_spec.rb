@@ -9,7 +9,7 @@ describe SimpleMetaTags::MetaTag::OpenGraph do
 
   it 'renders properly' do
     html = "<meta property='og:title' content='my title' />"
-    expect(tag.render).to eq(html)
+    expect(tag.to_html).to eq(html)
   end
 
   context 'is not a valid meta_id' do

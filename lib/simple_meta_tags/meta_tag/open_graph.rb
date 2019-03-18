@@ -12,7 +12,7 @@ module SimpleMetaTags
         new(meta_id, options)
       end
 
-      def render
+      def to_html
         "<meta #{render_attributes_in_tag} />"
       end
 

@@ -1,6 +1,7 @@
 require "simple_meta_tags/version"
 require "simple_meta_tags/document"
 require "simple_meta_tags/meta_tag"
+require "simple_meta_tags/meta_tag_missing"
 
 module SimpleMetaTags
 

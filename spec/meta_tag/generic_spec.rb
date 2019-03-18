@@ -11,6 +11,6 @@ describe SimpleMetaTags::MetaTag::Generic do
   it 'renders properly' do
     tag = SimpleMetaTags::MetaTag::Generic.build('referrer', 'unsafe-url')
     html = "<meta name='referrer' content='unsafe-url' />"
-    expect(tag.render).to eq(html)
+    expect(tag.to_html).to eq(html)
   end
 end

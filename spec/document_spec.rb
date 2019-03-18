@@ -2,6 +2,8 @@ require 'spec_helper'
 
 describe SimpleMetaTags::Document do
   let(:document) { SimpleMetaTags::Document.new }
+  let(:expected_text) {"<meta name='title' content='my title' />\n" +
+                       "<meta property='og:title' content='my title' />"}
 
   it 'adds single tag properly' do
     expect(document.tags.size).to eq(0)
@@ -18,7 +20,6 @@ describe SimpleMetaTags::Document do
   end
 
   describe 'renders tags' do
-
     it 'renders when added 1 by 1' do
       document.meta('MobileOptimized', 320)
       document.meta('og:image:type', 'image/jpeg')
@@ -39,6 +40,22 @@ describe SimpleMetaTags::Document do
 
       expect(document.html_tags).to eq(expected_text)
     end
+  end
+
+  describe 'Required/optional meta tags' do
+    let(:expected_text) {"<meta property='og:image:type' content='image/jpeg' />"}
+
+    it 'raises an error when some tags are missing but doesn\'t when optional' do
+
+      document.require(['og:title', 'og:image:type'])
+      document.meta('og:image:type', 'image/jpeg')
+      expect{document.html_tags}.to raise_error(SimpleMetaTags::MetaTagMissing)
+
+      document.optional('og:title')
+      expect(document.html_tags).to eq(expected_text)
+    end
+
+
   end
 
 end
