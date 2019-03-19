@@ -26,7 +26,7 @@ describe SimpleMetaTags::Document do
       document.meta('twitter:title', 'my title twitter')
       document.meta('title', 'my title basic')
       document.meta('refresh', 10)
-      document.meta('canonical', 'http://google.com')
+      document.meta('rel:canonical', 'http://google.com')
       document.meta('og:title', 'my title')
 
       expected_text = "<meta name='MobileOptimized' content='320' />\n" +
@@ -50,6 +50,24 @@ describe SimpleMetaTags::Document do
     end
   end
 
+  context 'many rel:alternate tags' do
+    it 'renders it properly' do
+      document.meta('rel:canonical', 'http://google.com')
+      document.meta('rel:alternate:es', 'http://google.com/es')
+      document.meta('rel:alternate:en', 'http://google.com/en')
+      document.meta('rel:alternate:fr', 'http://google.com/fr')
+      document.meta('og:title', 'my title')
+
+      expected_text = "<link rel='canonical' href='http://google.com' />\n" +
+        "<link rel='alternate' hreflang='es' href='http://google.com/es' />\n" +
+        "<link rel='alternate' hreflang='en' href='http://google.com/en' />\n" +
+        "<link rel='alternate' hreflang='fr' href='http://google.com/fr' />\n" +
+        "<meta property='og:title' content='my title' />"
+
+      expect(document.html_tags).to eq(expected_text)
+    end
+  end
+
   describe 'Required/optional meta tags' do
     let(:expected_text) {"<meta property='og:image:type' content='image/jpeg' />\n" +
                          "<link rel='canonical' href='http://google.com' />"}
@@ -57,12 +75,12 @@ describe SimpleMetaTags::Document do
     it 'raises an error when some tags are missing but doesn\'t when optional' do
 
       document.require(['og:title', 'og:image:type'])
-      document.require('canonical')
+      document.require('rel:canonical')
       document.meta('og:image:type', 'image/jpeg')
       expect{document.html_tags}.to raise_error(SimpleMetaTags::MetaTagMissing)
 
       document.optional('og:title')
-      document.meta('canonical', 'http://google.com')
+      document.meta('rel:canonical', 'http://google.com')
       expect(document.html_tags).to eq(expected_text)
 
       document.require(['og:title', 'og:image:type'])
