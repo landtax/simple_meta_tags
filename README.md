@@ -200,7 +200,6 @@ category and displayed as `meta` tag
 
   @doc.meta('referrer', 'unsafe-url')
   @doc.meta('robots', 'noindex,nofollow')
-  @doc.meta('viewport', 'noindex,nofollow')
   @doc.meta('viewport', 'width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1')
 
   @doc.html_tags
