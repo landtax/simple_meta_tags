@@ -100,7 +100,7 @@ are affected and reflect the new content
   # <title> Another title for my website </title>
   # <meta property='og:title' content='Another title for my website' />
 
-  @doc.alias('titles').remove(['og:title']
+  @doc.alias('titles').remove(['og:title'])
   @doc.html_tags
 
   # <title> Another title for my website </title>
